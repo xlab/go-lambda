@@ -26,7 +26,7 @@ func getMain(packageName, packageFunc string) []byte {
 import %s as pkg`, packageName)
 
 	fmt.Fprintln(buf, "\n")
-	fmt.Fprintf(buf, `def lol(event, context):
+	fmt.Fprintf(buf, `def %s(event, context):
     c = pkg.Context()
     c.FunctionName = context.function_name
     c.FunctionVersion = context.function_version
@@ -36,6 +36,6 @@ import %s as pkg`, packageName)
     c.LogGroupName = context.log_group_name
     c.LogStreamName = context.log_stream_name
     result = pkg.%s(c)
-    return result`, strings.Title(packageFunc))
+    return result`, packageFunc, strings.Title(packageFunc))
 	return buf.Bytes()
 }
