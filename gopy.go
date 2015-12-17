@@ -45,13 +45,20 @@ func dockerGopy(pkg string) {
 	}
 	pwd, _ := os.Getwd()
 	dockerPath := getExecPath("docker")
+
+	gopath, mounts := gopathMounts("/go")
+	args := []string{dockerPath,
+		"run", "-a", "stdout", "-a", "stderr", "--rm", "-e", "GOPATH=" + gopath,
+		"-v", mountPackageDir(pkg, "/go/src/in"), "-v", fmt.Sprintf("%s:/out", pwd),
+	}
+	for i, src := range mounts {
+		args = append(args, "-v", fmt.Sprintf("%s:/go/path%d/src", src, i))
+	}
+	args = append(args, "xlab/gopy", "app", "bind", "-output", "/out", "in")
+
 	cmd := exec.Cmd{
-		Path: dockerPath,
-		Args: []string{dockerPath,
-			"run", "-a", "stdout", "-a", "stderr", "--rm",
-			"-v", mountPackageDir(pkg, "/go/src/in"), "-v", fmt.Sprintf("%s:/out", pwd),
-			"xlab/gopy", "app", "bind", "-output", "/out", "in",
-		},
+		Path:   dockerPath,
+		Args:   args,
 		Stdout: os.Stdout,
 		Stderr: os.Stderr,
 	}

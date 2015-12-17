@@ -1,5 +1,17 @@
-MIT
+## go-lambda
+
+### Example
 
 ```
-PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/System/Library/Frameworks/Python.framework/Versions/2.7/lib/pkgconfig
+$ go-lambda list
+$ go-lambda create --role arn:aws:iam::account-id:role/lambda_basic_execution handler github.com/xlab/go-lambda/example
+
+... make changes ...
+
+$ go-lambda update example-handler handler github.com/xlab/go-lambda/example
+$ go-lambda list
 ```
+
+### License
+
+MIT

@@ -3,6 +3,8 @@ package main
 import (
 	"archive/zip"
 	"bytes"
+	"fmt"
+	"go/build"
 	"log"
 	"os"
 	"os/exec"
@@ -10,32 +12,37 @@ import (
 	"github.com/jhoonb/archivex"
 )
 
-func packageName(pkg string) string {
-	path := getExecPath("go")
-	cmd := exec.Cmd{
-		Path:   path,
-		Args:   []string{path, "list", "-f", "{{.Name}}", pkg},
-		Stderr: os.Stderr,
+func gopathMounts(dir string) (string, []string) {
+	gopath := "/go"
+	srcDirs := build.Default.SrcDirs()
+	for i := range srcDirs {
+		gopath += fmt.Sprintf(":%s/path%d", dir, i)
 	}
-	name, err := cmd.Output()
-	if err != nil {
-		log.Fatalln(err)
-	}
-	return string(bytes.TrimSpace(name))
+	return gopath, srcDirs
 }
 
-func packageDir(pkg string) string {
-	path := getExecPath("go")
-	cmd := exec.Cmd{
-		Path:   path,
-		Args:   []string{path, "list", "-f", "{{.Dir}}", pkg},
-		Stderr: os.Stderr,
+func packageName(pkgImport string) string {
+	var name string
+	for _, src := range build.Default.SrcDirs() {
+		pkg, err := build.Import(pkgImport, src, build.ImportComment)
+		if err != nil || pkg.IsCommand() || pkg.Goroot {
+			continue
+		}
+		name = pkg.Name
 	}
-	name, err := cmd.Output()
-	if err != nil {
-		log.Fatalln(err)
+	return name
+}
+
+func packageDir(pkgImport string) string {
+	var dir string
+	for _, src := range build.Default.SrcDirs() {
+		pkg, err := build.Import(pkgImport, src, build.ImportComment)
+		if err != nil || pkg.IsCommand() || pkg.Goroot {
+			continue
+		}
+		dir = pkg.Dir
 	}
-	return string(bytes.TrimSpace(name))
+	return dir
 }
 
 func getExecPath(name string) string {
