@@ -1,6 +1,6 @@
 ## go-lambda
 
-![go-lambda](http://cl.ly/3V331k34160Z/go-lamda-small.png)
+![go-lambda](http://cl.ly/1T2s1m0j0j2U/go-lamda-mini.png)
 
 ### Example
 
