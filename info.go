@@ -122,3 +122,14 @@ func functionInfo(f *lambda.FunctionConfiguration, region string) {
 	table.AddRow("Version", *f.Version)
 	fmt.Println(table.Render())
 }
+
+func listRegions() {
+	table := termtables.CreateTable()
+	table.UTF8Box()
+	table.AddTitle("AWS LAMBDA REGIONS (2015-12-15)")
+	table.AddRow("us-east-1", "US East (N. Virginia)")
+	table.AddRow("us-west-2", "US West (Oregon)")
+	table.AddRow("eu-west-1", "EU (Ireland)")
+	table.AddRow("ap-northeast-1", "Asia Pacific (Tokyo)")
+	fmt.Println(table.Render())
+}

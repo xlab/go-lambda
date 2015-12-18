@@ -8,6 +8,8 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strings"
+	"text/template"
 
 	"github.com/jhoonb/archivex"
 )
@@ -81,5 +83,18 @@ func makeZip(main []byte, mainPath, libPath string, other ...string) []byte {
 		}
 	}
 	zipper.Close()
+	return buf.Bytes()
+}
+
+func getMain(packageName, packageFunc string) []byte {
+	buf := new(bytes.Buffer)
+	tpl := template.Must(template.New("module.py").Parse(moduleTemplate))
+	tpl.Execute(buf, struct {
+		PackageName string
+		FuncName    string
+		PackageFunc string
+	}{
+		packageName, packageFunc, strings.Title(packageFunc),
+	})
 	return buf.Bytes()
 }
