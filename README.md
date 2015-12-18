@@ -1,5 +1,7 @@
 ## go-lambda
 
+![go-lambda](http://cl.ly/3V331k34160Z/go-lamda-small.png)
+
 ### Example
 
 ```
