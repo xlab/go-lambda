@@ -126,7 +126,7 @@ func functionInfo(f *lambda.FunctionConfiguration, region string) {
 func listRegions() {
 	table := termtables.CreateTable()
 	table.UTF8Box()
-	table.AddTitle("AWS LAMBDA REGIONS (2015-12-15)")
+	table.AddTitle("AWS LAMBDA REGIONS (2015-12-20)")
 	table.AddRow("us-east-1", "US East (N. Virginia)")
 	table.AddRow("us-west-2", "US West (Oregon)")
 	table.AddRow("eu-west-1", "EU (Ireland)")
