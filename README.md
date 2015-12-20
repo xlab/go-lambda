@@ -1,6 +1,14 @@
-## go-lambda [![aws](https://d0.awsstatic.com/logos/aws/AWS_Logo_PoweredBy_127px.png)](https://aws.amazon.com) [![Gitter](https://badges.gitter.im/xlab/go-lambda.svg)](https://gitter.im/xlab/go-lambda?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+## go-lambda [![aws](https://d0.awsstatic.com/logos/aws/AWS_Logo_PoweredBy_127px.png)](https://aws.amazon.com) [![Gitter](https://badges.gitter.im/xlab/go-lambda.svg)](https://gitter.im/xlab/go-lambda?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![Build Status](https://travis-ci.org/xlab/go-lambda.svg)](https://travis-ci.org/xlab/go-lambda)
 
 `go-lambda` is a multi-purpose tool for creating and managing AWS Lambda instances backed by arbitrary Go code. Since there is no official support of Go, this tool automatically generates a wrappig module in Python 2.7 which is able to pass data back and forth to the Go land. Check out an [example](/example/example.go) function.
+
+### Installation
+
+```
+$ go get github.com/xlab/go-lambda
+```
+
+Keep in mind that if you are using something other than `Linux x86_64`, this tool will use the [xlab/go-lambda](https://hub.docker.com/r/xlab/go-lambda/) Docker image in order to create cross-platform modules for AWS.
 
 ### Reference
 
