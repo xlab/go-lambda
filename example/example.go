@@ -1,24 +1,30 @@
+// Package example shows how an AWS Lambda function can be implemented using Go.
+//
+// Building: `go-lambda update 1 handler github.com/xlab/go-lambda/example`
 package example
 
-import "C"
-import "unsafe"
+import (
+	"bytes"
+	"fmt"
+	"time"
 
-//export Handler
-var Handler = func(event, context *C.char) (result *C.char, size C.size_t) {
+	"github.com/xlab/go-lambda/lambda"
+)
 
-	str := "hello world"
-	hdr := (*stringHeader)(unsafe.Pointer(&str))
-	result = (*C.char)(unsafe.Pointer(hdr.Data))
-	size = (C.size_t)(hdr.Len)
-	return
-	// buf := new(bytes.Buffer)
-	// fmt.Fprintf(buf, "Hello from %s! Mem allocated %s\n", c.FunctionName, c.MemoryLimit)
-	// fmt.Fprintf(buf, "Params you've passed: %#v\n", event)
-	// fmt.Fprintln(buf, "Current time:", time.Now().Format(time.Kitchen))
-	// return buf.String()
-}
+// Handler will be called by a Python module wrapping this package.
+var Handler = lambda.Use(lambda.HandlerFunc(exampleHandler))
 
-type stringHeader struct {
-	Data uintptr
-	Len  int
+func exampleHandler(event lambda.Dict, context *lambda.Context) []byte {
+	buf := new(bytes.Buffer)
+
+	// Use some variable from lambda context
+	fmt.Fprintf(buf, "Hello from %s. Current time: %v\n",
+		context.FunctionName, time.Now().Format(time.Kitchen))
+
+	// Read some field from event data
+	if name, ok := event["name"].(string); ok {
+		fmt.Fprintf(buf, "Have a nice day, %s!\n", name)
+	}
+
+	return buf.Bytes()
 }

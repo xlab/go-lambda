@@ -80,7 +80,7 @@ func dockerGopy(pkg string) {
 	for i, src := range mounts {
 		args = append(args, "-v", fmt.Sprintf("%s:/go/path%d/src", src, i))
 	}
-	args = append(args, "xlab/gopy", "app", "bind", "-output", "/out", "in")
+	args = append(args, "gopy/gopy", "app", "bind", "-output", "/out", "in")
 	if *debug {
 		log.Println(strings.Join(args, " "))
 	}
@@ -140,7 +140,7 @@ func dockerBuild(pkg, modulePath string) {
 	for i, src := range mounts {
 		args = append(args, "-v", fmt.Sprintf("%s:/go/path%d/src", src, i))
 	}
-	args = append(args, "golang", "go", "build", "-buildmode", "c-shared", "-o", "/out/module.so", "module")
+	args = append(args, "xlab/go-lambda", "go", "build", "-buildmode", "c-shared", "-o", "/out/module.so", "module")
 	if *debug {
 		log.Println(strings.Join(args, " "))
 	}

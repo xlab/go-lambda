@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strconv"
 
@@ -108,14 +109,15 @@ func main() {
 			dryRun := cmd.BoolOpt("dry", false, "Run in dry mode, do not actually upload anything, but all the processing will be done.")
 
 			cmd.Action = func() {
-				tmp := getTempDir()
-				buildModuleBridge(tmp, *packagePath, *packageFunc)
+				pwd, _ := os.Getwd()
+				buildModuleBridge(filepath.Join(pwd, "_module_cgo"), *packagePath, *packageFunc)
 				packageName := packageName(*packagePath)
 				if *funcName == "package-func" {
 					*funcName = fmt.Sprintf("%s-%s", packageName, *packageFunc)
 				}
 				module := getModuleSource(packageName, *packageFunc)
-				zip := makeZip(module, "module.py", "module.so", *additionalFiles...)
+				modulePath := fmt.Sprintf("%s.py", *funcName)
+				zip := makeZip(module, modulePath, "module.so", *additionalFiles...)
 				if len(*writeZip) > 0 {
 					if err := ioutil.WriteFile(*writeZip, zip, 0644); err != nil {
 						log.Fatalln(err)
@@ -154,14 +156,15 @@ func main() {
 			dryRun := cmd.BoolOpt("dry", false, "Run in dry mode, do not actually upload anything, but all the processing will be done.")
 
 			cmd.Action = func() {
-				tmp := getTempDir()
-				buildModuleBridge(tmp, *packagePath, *packageFunc)
+				pwd, _ := os.Getwd()
+				buildModuleBridge(filepath.Join(pwd, "_module_cgo"), *packagePath, *packageFunc)
 				packageName := packageName(*packagePath)
 				if *funcName == "package-func" {
 					*funcName = fmt.Sprintf("%s-%s", packageName, *packageFunc)
 				}
 				module := getModuleSource(packageName, *packageFunc)
-				zip := makeZip(module, "module.py", "module.so", *additionalFiles...)
+				modulePath := fmt.Sprintf("%s.py", *funcName)
+				zip := makeZip(module, modulePath, "module.so", *additionalFiles...)
 				if len(*writeZip) > 0 {
 					if err := ioutil.WriteFile(*writeZip, zip, 0644); err != nil {
 						log.Fatalln(err)

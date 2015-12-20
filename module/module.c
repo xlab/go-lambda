@@ -7,8 +7,6 @@
 #include "memoryobject.h"
 #include "bufferobject.h"
 
-#include "module.h"
-
 #if PY_VERSION_HEX > 0x03000000
 #error "python 3 is not yet supported"
 #endif
@@ -19,6 +17,8 @@ typedef struct {
 	PyObject_HEAD
 	lambda_handler_func ptr;
 } lambda_handler;
+
+extern void* get_lambda_handler();
 
 static PyObject*
 lambda_handler_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
@@ -33,6 +33,13 @@ lambda_handler_dealloc(lambda_handler *self) {
 	self->ob_type->tp_free((PyObject*)self);
 }
 
+struct lambda_handler_call_return {
+	char* data;
+	size_t size;
+};
+
+extern struct lambda_handler_call_return lambda_handler_call(void* p0, char* event, char* context);
+
 static PyObject *
 lambda_handler_tp_call(lambda_handler *self, PyObject *args, PyObject *other) {
 	char *event;
@@ -42,7 +49,7 @@ lambda_handler_tp_call(lambda_handler *self, PyObject *args, PyObject *other) {
 	}
 	struct lambda_handler_call_return ret;
 	ret = lambda_handler_call(self->ptr, event, context);
-	PyObject *result = PyString_FromStringAndSize(ret.r0, ret.r1);
+	PyObject *result = PyString_FromStringAndSize(ret.data, ret.size);
 	return result;
 }
 

@@ -92,10 +92,21 @@ func makeZip(main []byte, mainPath, libPath string, other ...string) []byte {
 
 func getModuleSource(packageName, packageFunc string) []byte {
 	buf := new(bytes.Buffer)
-	fmt.Fprintf(buf, "import module\nimport json\n\n")
-	fmt.Fprintf(buf, "handler = module.lambda_handler()\n\n")
+	fmt.Fprintln(buf, `
+import module
+import json
+
+class Encoder(json.JSONEncoder):
+    def default(self, o):
+        if o.__class__.__name__ == 'CognitoIdentity': # very wow much reflection
+            return dict(cognito_identity_id=o.cognito_identity_id,
+                cognito_identity_pool_id=o.cognito_identity_pool_id)
+        else:
+            return o.__dict__
+`)
+	fmt.Fprintln(buf, "lambda_handler = module.lambda_handler()")
 	fmt.Fprintf(buf, "def %s(event, context):\n", packageFunc)
-	fmt.Fprintln(buf, "    return handler(json.dumps(event), json.dumps(context))")
+	fmt.Fprintln(buf, "    return lambda_handler(json.dumps(event), json.dumps(context, cls=Encoder))")
 	return buf.Bytes()
 }
 
@@ -115,10 +126,6 @@ func buildModuleBridge(tempDir, pkg, packageFunc string) {
 	defer os.RemoveAll(tempDir)
 
 	err := ioutil.WriteFile(filepath.Join(tempDir, "module.c"), MustAsset("module/module.c"), 0644)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	err = ioutil.WriteFile(filepath.Join(tempDir, "module.h"), MustAsset("module/module.h"), 0644)
 	if err != nil {
 		log.Fatalln(err)
 	}
