@@ -1,6 +1,6 @@
-## go-lambda
+![go-lambda](http://cl.ly/1w1U1n3w3W2n/go-lamda-alt.png)
 
-![go-lambda](http://cl.ly/1T2s1m0j0j2U/go-lamda-mini.png)
+## go-lambda ![aws](https://d0.awsstatic.com/logos/aws/AWS_Logo_PoweredBy_127px.png)
 
 ### Example
 
