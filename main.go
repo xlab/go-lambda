@@ -96,8 +96,8 @@ func main() {
 	golambda.Command("create", "Creates an AWS Lambda function and uploads specified Go package as its source.",
 		func(cmd *cli.Cmd) {
 			cmd.Spec = "[OPTIONS] FUNC PACKAGE [FILES...]"
-			packageFunc := cmd.StringArg("FUNC", "", "A function name from Go package to be called from within Python wrapper.")
-			packagePath := cmd.StringArg("PACKAGE", ".", "The Go package import path.")
+			packageFunc := cmd.StringArg("FUNC", "", "Function name in Go package to be called from within Python wrapper.")
+			packagePath := cmd.StringArg("PACKAGE", ".", "Fully qualified import path of a Go package.")
 			additionalFiles := cmd.StringsArg("FILES", nil, "A list of additional static files to be included in archive.")
 			funcName := cmd.StringOpt("n name", "package-func", "The name you want to assign to the function you are uploading, should be Amazon Resource Name (ARN) or unqualified.")
 			funcDescription := cmd.StringOpt("d description", "", "A short, user-defined function description. Lambda does not use this value.")
@@ -108,20 +108,20 @@ func main() {
 			dryRun := cmd.BoolOpt("dry", false, "Run in dry mode, do not actually upload anything, but all the processing will be done.")
 
 			cmd.Action = func() {
-				runGopy(*packagePath)
+				tmp := getTempDir()
+				buildModuleBridge(tmp, *packagePath, *packageFunc)
 				packageName := packageName(*packagePath)
 				if *funcName == "package-func" {
 					*funcName = fmt.Sprintf("%s-%s", packageName, *packageFunc)
 				}
 				module := getModuleSource(packageName, *packageFunc)
-				libPath := fmt.Sprintf("%s.so", packageName)
-				modulePath := fmt.Sprintf("%s.py", *funcName)
-				zip := makeZip(module, modulePath, libPath, *additionalFiles...)
+				zip := makeZip(module, "module.py", "module.so", *additionalFiles...)
 				if len(*writeZip) > 0 {
 					if err := ioutil.WriteFile(*writeZip, zip, 0644); err != nil {
 						log.Fatalln(err)
 					}
 				}
+
 				if *dryRun {
 					return
 				}
@@ -146,24 +146,22 @@ func main() {
 			cmd.Spec = "[OPTIONS] (ID | NAME) FUNC PACKAGE [FILES...]"
 			idStr := cmd.StringArg("ID", "", "Function ID (as in `list` result).")
 			cmd.StringArg("NAME", "", "Function NAME.")
-			packageFunc := cmd.StringArg("FUNC", "", "A function name from Go package to be called from within Python wrapper.")
-			packagePath := cmd.StringArg("PACKAGE", ".", "The Go package import path.")
+			packageFunc := cmd.StringArg("FUNC", "", "Function name in Go package to be called from within Python wrapper.")
+			packagePath := cmd.StringArg("PACKAGE", ".", "Fully qualified import path of a Go package.")
 			additionalFiles := cmd.StringsArg("FILES", nil, "A list of additional static files to be included in archive.")
 			funcName := cmd.StringOpt("n name", "package-func", "The name you want to assign to the function you are uploading, should be Amazon Resource Name (ARN) or unqualified.")
 			writeZip := cmd.StringOpt("w write-zip", "", "Path to write the produced .zip of an AWS Lambda function source.")
 			dryRun := cmd.BoolOpt("dry", false, "Run in dry mode, do not actually upload anything, but all the processing will be done.")
 
 			cmd.Action = func() {
-				runGopy(*packagePath)
+				tmp := getTempDir()
+				buildModuleBridge(tmp, *packagePath, *packageFunc)
 				packageName := packageName(*packagePath)
 				if *funcName == "package-func" {
 					*funcName = fmt.Sprintf("%s-%s", packageName, *packageFunc)
 				}
-
 				module := getModuleSource(packageName, *packageFunc)
-				libPath := fmt.Sprintf("%s.so", packageName)
-				modulePath := fmt.Sprintf("%s.py", *funcName)
-				zip := makeZip(module, modulePath, libPath, *additionalFiles...)
+				zip := makeZip(module, "module.py", "module.so", *additionalFiles...)
 				if len(*writeZip) > 0 {
 					if err := ioutil.WriteFile(*writeZip, zip, 0644); err != nil {
 						log.Fatalln(err)
