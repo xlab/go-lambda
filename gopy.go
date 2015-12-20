@@ -7,10 +7,15 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"strings"
 )
 
+func isNativeGopy() bool {
+	return runtime.GOOS == "linux" && runtime.GOARCH == "amd64"
+}
+
 func runGopy(pkg string) {
-	if runtime.GOOS == "linux" && runtime.GOARCH == "amd64" {
+	if isNativeGopy() {
 		nativeGopy(pkg)
 		return
 	}
@@ -22,9 +27,13 @@ func nativeGopy(pkg string) {
 		log.Println("gopy bind native", pkg)
 	}
 	path := getExecPath("gopy")
+	args := []string{path, "bind", pkg}
+	if *debug {
+		log.Println(strings.Join(args, " "))
+	}
 	cmd := exec.Cmd{
 		Path:   path,
-		Args:   []string{path, "bind", pkg},
+		Args:   args,
 		Stderr: os.Stderr,
 	}
 	if *debug {
@@ -55,6 +64,9 @@ func dockerGopy(pkg string) {
 		args = append(args, "-v", fmt.Sprintf("%s:/go/path%d/src", src, i))
 	}
 	args = append(args, "xlab/gopy", "app", "bind", "-output", "/out", "in")
+	if *debug {
+		log.Println(strings.Join(args, " "))
+	}
 
 	cmd := exec.Cmd{
 		Path:   dockerPath,

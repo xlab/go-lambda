@@ -27,9 +27,8 @@ func (d Dict) Int(key string) (v int, err error) {
 	return
 }
 
-func (d Dict) SetInt(key string, v int) error {
+func (d Dict) SetInt(key string, v int) {
 	d.m[key] = v
-	return nil
 }
 
 func (d Dict) Int64(key string) (v int64, err error) {
@@ -42,9 +41,8 @@ func (d Dict) Int64(key string) (v int64, err error) {
 	return
 }
 
-func (d Dict) SetInt64(key string, v int64) error {
+func (d Dict) SetInt64(key string, v int64) {
 	d.m[key] = v
-	return nil
 }
 
 func (d Dict) Bool(key string) (v bool, err error) {
@@ -57,9 +55,8 @@ func (d Dict) Bool(key string) (v bool, err error) {
 	return
 }
 
-func (d Dict) SetBool(key string, v bool) error {
+func (d Dict) SetBool(key string, v bool) {
 	d.m[key] = v
-	return nil
 }
 
 func (d Dict) String(key string) (v string, err error) {
@@ -72,9 +69,8 @@ func (d Dict) String(key string) (v string, err error) {
 	return
 }
 
-func (d Dict) SetString(key, v string) error {
+func (d Dict) SetString(key, v string) {
 	d.m[key] = v
-	return nil
 }
 
 func (d Dict) Float64(key string) (v float64, err error) {
@@ -87,7 +83,6 @@ func (d Dict) Float64(key string) (v float64, err error) {
 	return
 }
 
-func (d Dict) SetFloat64(key string, v float64) error {
+func (d Dict) SetFloat64(key string, v float64) {
 	d.m[key] = v
-	return nil
 }

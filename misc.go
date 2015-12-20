@@ -8,8 +8,6 @@ import (
 	"log"
 	"os"
 	"os/exec"
-	"strings"
-	"text/template"
 
 	"github.com/jhoonb/archivex"
 )
@@ -86,15 +84,10 @@ func makeZip(main []byte, mainPath, libPath string, other ...string) []byte {
 	return buf.Bytes()
 }
 
-func getMain(packageName, packageFunc string) []byte {
+func getModuleSource(packageName, packageFunc string) []byte {
 	buf := new(bytes.Buffer)
-	tpl := template.Must(template.New("module.py").Parse(moduleTemplate))
-	tpl.Execute(buf, struct {
-		PackageName string
-		FuncName    string
-		PackageFunc string
-	}{
-		packageName, packageFunc, strings.Title(packageFunc),
-	})
+	fmt.Fprintf(buf, "import module\nimport json\n\n")
+	fmt.Fprintf(buf, "def %s(event, context):\n", packageFunc)
+	fmt.Fprintln(buf, "    return module.lambda_handler(json.dumps(event), json.dumps(context))")
 	return buf.Bytes()
 }

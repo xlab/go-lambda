@@ -42,6 +42,13 @@ func main() {
 			listRegions()
 		}
 	})
+	golambda.Command("gopy", "Generates Python bindings for a Go package using a dockerized tool from gopy project.",
+		func(cmd *cli.Cmd) {
+			pkg := cmd.StringArg("PACKAGE", "", "Fully qualified Go package name.")
+			cmd.Action = func() {
+				runGopy(*pkg)
+			}
+		})
 	golambda.Command("info", "Gets info about specific AWS Lambda function (specified by ID or NAME).",
 		func(cmd *cli.Cmd) {
 			cmd.Spec = "(ID | NAME)"
@@ -106,10 +113,10 @@ func main() {
 				if *funcName == "package-func" {
 					*funcName = fmt.Sprintf("%s-%s", packageName, *packageFunc)
 				}
-				main := getMain(packageName, *packageFunc)
+				module := getModuleSource(packageName, *packageFunc)
 				libPath := fmt.Sprintf("%s.so", packageName)
-				mainPath := fmt.Sprintf("%s.py", *funcName)
-				zip := makeZip(main, mainPath, libPath, *additionalFiles...)
+				modulePath := fmt.Sprintf("%s.py", *funcName)
+				zip := makeZip(module, modulePath, libPath, *additionalFiles...)
 				if len(*writeZip) > 0 {
 					if err := ioutil.WriteFile(*writeZip, zip, 0644); err != nil {
 						log.Fatalln(err)
@@ -153,10 +160,10 @@ func main() {
 					*funcName = fmt.Sprintf("%s-%s", packageName, *packageFunc)
 				}
 
-				main := getMain(packageName, *packageFunc)
+				module := getModuleSource(packageName, *packageFunc)
 				libPath := fmt.Sprintf("%s.so", packageName)
-				mainPath := fmt.Sprintf("%s.py", *funcName)
-				zip := makeZip(main, mainPath, libPath, *additionalFiles...)
+				modulePath := fmt.Sprintf("%s.py", *funcName)
+				zip := makeZip(module, modulePath, libPath, *additionalFiles...)
 				if len(*writeZip) > 0 {
 					if err := ioutil.WriteFile(*writeZip, zip, 0644); err != nil {
 						log.Fatalln(err)
