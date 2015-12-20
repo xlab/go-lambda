@@ -6,3 +6,5 @@ go:
 
 install:
   - go get github.com/xlab/go-lambda
+
+script: go test
