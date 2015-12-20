@@ -1,8 +1,8 @@
-# go-lambda [https://aws.amazon.com](![aws](https://d0.awsstatic.com/logos/aws/AWS_Logo_PoweredBy_127px.png)) [![Gitter](https://badges.gitter.im/xlab/go-lambda.svg)](https://gitter.im/xlab/go-lambda?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+## go-lambda [![aws](https://d0.awsstatic.com/logos/aws/AWS_Logo_PoweredBy_127px.png)](https://aws.amazon.com) [![Gitter](https://badges.gitter.im/xlab/go-lambda.svg)](https://gitter.im/xlab/go-lambda?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-`go-lambda` is a multi-purpose tool for creating and managing AWS Lambda instances backed by arbitrary Go code. Since there is no official support of Go, this tool automatically generates a wrappig module in Python 2.7 which is able to pass data back and forth to the Go land.
+`go-lambda` is a multi-purpose tool for creating and managing AWS Lambda instances backed by arbitrary Go code. Since there is no official support of Go, this tool automatically generates a wrappig module in Python 2.7 which is able to pass data back and forth to the Go land. Check out an [example](/example/example.go) function.
 
-## Reference
+### Reference
 
 ```
 Usage: go-lambda [OPTIONS] COMMAND [arg...]
@@ -27,9 +27,9 @@ Commands:
 Run 'go-lambda COMMAND --help' for more information on a command.
 ```
 
-## Example
+### Examples
 
-### List available lambda functions in default region
+#### List available lambda functions in default region:
 
 ```
 $ ./go-lambda list
@@ -43,7 +43,7 @@ $ ./go-lambda list
 ╰───┴─────────────────┴─────────────────────┴──────────┴───────────┴─────────┴─────────────╯
 ```
 
-### Create new lambda backed by Go code
+#### Create a new lambda backed by Go code:
 
 ```
 $ go-lambda create --role arn:aws:iam::account-id:role/lambda_basic_execution handler github.com/xlab/go-lambda/example
@@ -67,20 +67,19 @@ $ go-lambda create --role arn:aws:iam::account-id:role/lambda_basic_execution ha
 
 Now you can manage your function in the AWS dashboard, create API endpoints and event handlers.
 
-
-### Update existing function after fixing its Go code
+#### Update existing function after fixing its Go code:
 
 ```
 $ go-lambda update example-handler handler github.com/xlab/go-lambda/example
 ```
 
-## Roadmap
+### Roadmap
 
-[] Replace JSON marshalling with something effective;
-[] Wait till [go-python/gopy](https://github.com/go-python/gopy) stabilizes enough to support `map[string]interface{}`;
-[] Try to convince AWS staff that we need the native Go support in their cloud.
+- [ ] Replace JSON marshalling with something efficient;
+- [ ] Wait till [go-python/gopy](https://github.com/go-python/gopy) stabilizes enough to support `map[string]interface{}`;
+- [ ] Try to convince AWS staff that we need the native Go support in their cloud.
 
-Please spread a word about `go-lambda` — let people use their favourite language for AWS Lambda!
+Please, spread the word about `go-lambda` — let people use their favourite language for AWS Lambda!
 
 ![go-lambda](http://cl.ly/1w1U1n3w3W2n/go-lamda-alt.png)
 
