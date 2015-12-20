@@ -1,4 +1,4 @@
-![go-lambda](http://cl.ly/1w1U1n3w3W2n/go-lamda-alt.png)
+![go-lambda](http://cl.ly/3a3V312h102e/go-lamda-gh.png)
 
 ## go-lambda ![aws](https://d0.awsstatic.com/logos/aws/AWS_Logo_PoweredBy_127px.png)
 
