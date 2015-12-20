@@ -87,7 +87,8 @@ func makeZip(main []byte, mainPath, libPath string, other ...string) []byte {
 func getModuleSource(packageName, packageFunc string) []byte {
 	buf := new(bytes.Buffer)
 	fmt.Fprintf(buf, "import module\nimport json\n\n")
+	fmt.Fprintf(buf, "handler = module.lambda_handler()\n\n")
 	fmt.Fprintf(buf, "def %s(event, context):\n", packageFunc)
-	fmt.Fprintln(buf, "    return module.lambda_handler(json.dumps(event), json.dumps(context))")
+	fmt.Fprintln(buf, "    return handler(json.dumps(event), json.dumps(context))")
 	return buf.Bytes()
 }

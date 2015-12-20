@@ -1,5 +1,18 @@
 /* Created by "go tool cgo" - DO NOT EDIT. */
 
+/* package github.com/xlab/go-lambda/module */
+
+/* Start of preamble from import "C" comments.  */
+
+
+
+#include <stdlib.h>
+
+
+
+/* End of preamble from import "C" comments.  */
+
+
 /* Start of boilerplate cgo prologue.  */
 
 #ifndef GO_CGO_PROLOGUE_H
@@ -39,14 +52,16 @@ typedef struct { void *data; GoInt len; GoInt cap; } GoSlice;
 extern "C" {
 #endif
 
+
 extern void* get_lambda_handler();
 
+/* Return type for lambda_handler_call */
 struct lambda_handler_call_return {
-	char* data;
-	size_t size;
-} lambda_handler_result;
+	char* r0;
+	size_t r1;
+};
 
-extern lambda_handler_result lambda_handler_call(void* p0, char* event, char* context);
+extern struct lambda_handler_call_return lambda_handler_call(void* p0, char* p1, char* p2);
 
 #ifdef __cplusplus
 }

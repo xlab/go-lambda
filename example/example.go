@@ -9,7 +9,7 @@ var Handler = func(event, context *C.char) (result *C.char, size C.size_t) {
 	str := "hello world"
 	hdr := (*stringHeader)(unsafe.Pointer(&str))
 	result = (*C.char)(unsafe.Pointer(hdr.Data))
-	size = (*C.size_t)(unsafe.Pointer(hdr.Len))
+	size = (C.size_t)(hdr.Len)
 	return
 	// buf := new(bytes.Buffer)
 	// fmt.Fprintf(buf, "Hello from %s! Mem allocated %s\n", c.FunctionName, c.MemoryLimit)

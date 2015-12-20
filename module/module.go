@@ -1,6 +1,7 @@
 package main
 
 //#cgo pkg-config: python-2.7 --cflags --libs
+//#include <stdlib.h>
 import "C"
 
 import (
@@ -14,7 +15,7 @@ type lambda_handler unsafe.Pointer
 
 //export get_lambda_handler
 func get_lambda_handler() lambda_handler {
-	return (lambda_handler)(unsafe.Pointer(&lambda.{{.PackageFunc}}))
+	return (lambda_handler)(unsafe.Pointer(&lambda.Handler))
 }
 
 //export lambda_handler_call
