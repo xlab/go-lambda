@@ -1,4 +1,4 @@
-## go-lambda [![aws](https://d0.awsstatic.com/logos/aws/AWS_Logo_PoweredBy_127px.png)](https://aws.amazon.com) [![Gitter](https://badges.gitter.im/xlab/go-lambda.svg)](https://gitter.im/xlab/go-lambda?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![Build Status](https://travis-ci.org/xlab/go-lambda.svg)](https://travis-ci.org/xlab/go-lambda)
+# go-lambda [![aws](https://d0.awsstatic.com/logos/aws/AWS_Logo_PoweredBy_127px.png)](https://aws.amazon.com) [![Gitter](https://badges.gitter.im/xlab/go-lambda.svg)](https://gitter.im/xlab/go-lambda?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![Build Status](https://travis-ci.org/xlab/go-lambda.svg)](https://travis-ci.org/xlab/go-lambda)
 
 `go-lambda` is a multi-purpose tool for creating and managing AWS Lambda instances backed by arbitrary Go code. Since there is no official support of Go, this tool automatically generates a wrappig module in Python 2.7 which is able to pass data back and forth to the Go land. Check out an [example](/example/example.go) function.
 
@@ -94,7 +94,7 @@ $ go-lambda update example-handler handler github.com/xlab/go-lambda/example
 - [ ] Wait till [go-python/gopy](https://github.com/go-python/gopy) stabilizes enough to support `map[string]interface{}`;
 - [ ] Try to convince AWS staff that we need the native Go support in their cloud.
 
-Feel free to engage discussions in our gitter chat. And please, spread the word about `go-lambda` — let people use their favourite language for AWS Lambda! :)
+Please, spread the word about `go-lambda` — let people use their favourite language for AWS Lambda. 🍻
 
 ![go-lambda](http://cl.ly/1w1U1n3w3W2n/go-lamda-alt.png)
 
