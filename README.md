@@ -5,6 +5,7 @@
 ### Features at glance
 
 * `<10ms` startup time, feels like native experience;
+* Resulting `source.zip` size is only `1.0M` and in most cases has 2 files;
 * Easy to use: start writing your own lambdas in Go just in few minutes;
 * Relies on the official [AWS SDK for Go](https://github.com/aws/aws-sdk-go) while making all the requests, security is guaranteed;
 * No any boilerplate or "all-in-one" aims: the tool is made to do its job and nothing else. Yes, this is also a feature.
