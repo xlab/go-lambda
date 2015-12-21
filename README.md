@@ -2,13 +2,20 @@
 
 `go-lambda` is a multi-purpose tool for creating and managing AWS Lambda instances backed by arbitrary Go code. Since there is no official support of Go, this tool automatically generates a wrappig module in Python 2.7 which is able to pass data back and forth to the Go land. Check out an [example](/example/example.go) function.
 
+### Features at glance
+
+* `<10ms` startup time, feels like native experience;
+* Easy to use: start writing your own lambdas in Go just in few minutes;
+* Relies on the official [AWS SDK for Go](https://github.com/aws/aws-sdk-go) while making all the requests, security is guaranteed;
+* No any boilerplate or "all-in-one" aims: the tool is made to do its job and nothing else. Yes, this is also a feature.
+
 ### Installation
 
 ```
 $ go get github.com/xlab/go-lambda
 ```
 
-Keep in mind that if you are using something other than `Linux x86_64`, this tool will use the [xlab/go-lambda](https://hub.docker.com/r/xlab/go-lambda/) Docker image in order to create cross-platform modules for AWS.
+Keep in mind that if you are using something other than `Linux x86_64`, this tool will invoke the [xlab/go-lambda](https://hub.docker.com/r/xlab/go-lambda/) Docker image in order to create cross-platform modules for AWS. Prepare your Docker setup beforehand.
 
 ### Reference
 
@@ -83,13 +90,20 @@ $ go-lambda update example-handler handler github.com/xlab/go-lambda/example
 
 ### Roadmap
 
-- [ ] Replace JSON marshalling with something efficient;
+- [ ] Replace JSON marshalling with something efficient (maybe);
 - [ ] Wait till [go-python/gopy](https://github.com/go-python/gopy) stabilizes enough to support `map[string]interface{}`;
 - [ ] Try to convince AWS staff that we need the native Go support in their cloud.
 
-Please, spread the word about `go-lambda` — let people use their favourite language for AWS Lambda!
+Feel free to engage discussions in our gitter chat. And please, spread the word about `go-lambda` — let people use their favourite language for AWS Lambda! :)
 
 ![go-lambda](http://cl.ly/1w1U1n3w3W2n/go-lamda-alt.png)
+
+### Useful links
+
+* [AWS Serverless Multi-Tier Architectures Whitepaper](https://d0.awsstatic.com/whitepapers/AWS_Serverless_Multi-Tier_Architectures.pdf)
+* [Lambda limits](http://docs.aws.amazon.com/lambda/latest/dg/limits.html)
+* [The Twelve Days of Lambda](https://aws.amazon.com/blogs/compute/the-twelve-days-of-lambda/)
+* [GoSparta Project Limitations](http://gosparta.io/docs/limitations/)
 
 ## License
 

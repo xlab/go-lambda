@@ -7,18 +7,18 @@ import (
 
 import "C"
 
-type Dict map[string]interface{}
+type HandlerFunc func(event json.RawMessage, context *Context) []byte
 
-type HandlerFunc func(event Dict, context *Context) []byte
-
-type Bridge func(event, context *C.char) (result *C.char, size C.size_t)
-
-func Use(fn HandlerFunc) Bridge {
+// Use the provided HandlerFunc as handler for incoming requests. This function returns
+// a bridge that manages values passing between the caller (python) and the target HandlerFunc.
+//
+// Warning: bytes of eventData should be copied explicitly if you want to use them outside
+// the HandlerFunc scope (e.g. in goroutines), they are valid until the Bridge func returns.
+func Use(fn HandlerFunc) bridge {
 	return func(eventData, ctxData *C.char) (result *C.char, size C.size_t) {
-		var event Dict
-		json.Unmarshal(bytesFrom(eventData), &event)
 		var context *Context
 		json.Unmarshal(bytesFrom(ctxData), &context)
+		event := json.RawMessage(bytesFrom(eventData))
 
 		r := fn(event, context)
 
@@ -28,6 +28,8 @@ func Use(fn HandlerFunc) Bridge {
 		return
 	}
 }
+
+type bridge func(event, context *C.char) (result *C.char, size C.size_t)
 
 func bytesFrom(p *C.char) []byte {
 	var slice []byte

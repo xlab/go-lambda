@@ -1,6 +1,9 @@
 package lambda
 
-import "strconv"
+import (
+	"encoding/json"
+	"strconv"
+)
 
 // Context defines LambdaContext object as described on
 // http://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html
@@ -35,6 +38,6 @@ type ClientContext struct {
 	AppVersionCode string `json:"app_version_code"`
 	AppPackageName string `json:"app_package_name"`
 
-	Custom Dict `json:"custom"`
-	Env    Dict `json:"env"`
+	Custom json.RawMessage `json:"custom"`
+	Env    json.RawMessage `json:"env"`
 }

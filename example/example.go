@@ -1,30 +1,39 @@
 // Package example shows how an AWS Lambda function can be implemented using Go.
 //
-// Building: `go-lambda update 1 handler github.com/xlab/go-lambda/example`
+// Build steps: `go-lambda update example-handler handler github.com/xlab/go-lambda/example`
 package example
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"time"
 
 	"github.com/xlab/go-lambda/lambda"
 )
 
-// Handler will be called by a Python module wrapping this package.
+// Handler is a bridge that will be called by a python module wrapping this package.
 var Handler = lambda.Use(lambda.HandlerFunc(exampleHandler))
 
-func exampleHandler(event lambda.Dict, context *lambda.Context) []byte {
+func exampleHandler(event json.RawMessage, context *lambda.Context) []byte {
 	buf := new(bytes.Buffer)
 
-	// Use some variable from lambda context
+	// decode event data
+	req := new(request)
+	json.Unmarshal(event, &req)
+
+	// read a variable from LambdaContext
 	fmt.Fprintf(buf, "Hello from %s. Current time: %v\n",
 		context.FunctionName, time.Now().Format(time.Kitchen))
 
-	// Read some field from event data
-	if name, ok := event["name"].(string); ok {
-		fmt.Fprintf(buf, "Have a nice day, %s!\n", name)
+	// use some of the request data
+	if len(req.Name) > 0 {
+		fmt.Fprintf(buf, "Have a nice day, %s!\n", req.Name)
 	}
 
 	return buf.Bytes()
+}
+
+type request struct {
+	Name string `json:"name"`
 }
