@@ -105,6 +105,6 @@ Please, spread the word about `go-lambda` — let people use their favourite lan
 * [The Twelve Days of Lambda](https://aws.amazon.com/blogs/compute/the-twelve-days-of-lambda/)
 * [GoSparta Project Limitations](http://gosparta.io/docs/limitations/)
 
-## License
+### License
 
 [MIT](/LICENSE)
