@@ -151,19 +151,21 @@ func main() {
 			packageFunc := cmd.StringArg("FUNC", "", "Function name in Go package to be called from within Python wrapper.")
 			packagePath := cmd.StringArg("PACKAGE", ".", "Fully qualified import path of a Go package.")
 			additionalFiles := cmd.StringsArg("FILES", nil, "A list of additional static files to be included in archive.")
-			funcName := cmd.StringOpt("n name", "package-func", "The name you want to assign to the function you are uploading, should be Amazon Resource Name (ARN) or unqualified.")
 			writeZip := cmd.StringOpt("w write-zip", "", "Path to write the produced .zip of an AWS Lambda function source.")
 			dryRun := cmd.BoolOpt("dry", false, "Run in dry mode, do not actually upload anything, but all the processing will be done.")
 
 			cmd.Action = func() {
+				svc := lambda.New(session.New(&aws.Config{
+					Region: aws.String(*region),
+				}))
+				id, _ := strconv.Atoi(*idStr)
+				f := findFuction(svc, id, *idStr)
+
 				pwd, _ := os.Getwd()
 				buildModuleBridge(filepath.Join(pwd, "_module_cgo"), *packagePath, *packageFunc)
 				packageName := packageName(*packagePath)
-				if *funcName == "package-func" {
-					*funcName = fmt.Sprintf("%s-%s", packageName, *packageFunc)
-				}
 				module := getModuleSource(packageName, *packageFunc)
-				modulePath := fmt.Sprintf("%s.py", *funcName)
+				modulePath := fmt.Sprintf("%s.py", *f.FunctionName)
 				zip := makeZip(module, modulePath, "module.so", *additionalFiles...)
 				if len(*writeZip) > 0 {
 					if err := ioutil.WriteFile(*writeZip, zip, 0644); err != nil {
@@ -173,11 +175,6 @@ func main() {
 				if *dryRun {
 					return
 				}
-				svc := lambda.New(session.New(&aws.Config{
-					Region: aws.String(*region),
-				}))
-				id, _ := strconv.Atoi(*idStr)
-				f := findFuction(svc, id, *idStr)
 				updateFunction(svc, *f.FunctionName, *region, zip)
 			}
 		})
