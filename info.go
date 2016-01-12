@@ -12,7 +12,6 @@ import (
 
 	"github.com/apcera/termtables"
 	"github.com/aws/aws-sdk-go/service/lambda"
-	"github.com/cheggaaa/pb"
 )
 
 func listFunctions(svc *lambda.Lambda, region string, rx *regexp.Regexp) {
@@ -96,13 +95,15 @@ func functionSource(svc *lambda.Lambda, f *lambda.FunctionConfiguration, path st
 	if err != nil {
 		log.Fatalln(err)
 	}
-	bar := pb.New(int(resp.ContentLength)).SetUnits(pb.U_BYTES).SetRefreshRate(time.Millisecond * 10)
-	barproxy := bar.NewProxyReader(resp.Body)
-	bar.ShowSpeed = true
-	bar.Start()
-	io.Copy(out, barproxy)
+	// Temporarily turn off pb due to an unknown bug in master
+	//	bar := pb.New(int(resp.ContentLength)).SetUnits(pb.U_BYTES).SetRefreshRate(time.Millisecond * 10)
+	//	barproxy := bar.NewProxyReader(resp.Body)
+	//	bar.ShowSpeed = true
+	//	bar.Start()
+	//	io.Copy(out, barproxy)
+	io.Copy(out, resp.Body)
 	out.Close()
-	bar.Finish()
+	// bar.Finish()
 }
 
 func functionInfo(f *lambda.FunctionConfiguration, region string) {
