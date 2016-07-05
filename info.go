@@ -12,6 +12,7 @@ import (
 
 	"github.com/apcera/termtables"
 	"github.com/aws/aws-sdk-go/service/lambda"
+	"github.com/mitchellh/go-wordwrap"
 )
 
 func listFunctions(svc *lambda.Lambda, region string, rx *regexp.Regexp) {
@@ -31,11 +32,12 @@ func listFunctions(svc *lambda.Lambda, region string, rx *regexp.Regexp) {
 			continue
 		}
 		filtered++
+		descLimited := wordwrap.WrapString(*f.Description, 40)
 		table.AddRow(strconv.Itoa(i+1), *f.FunctionName,
 			parseDate(*f.LastModified).Format(time.RFC822),
 			fmt.Sprintf("%.2fK", float32(*f.CodeSize)/1024.0),
 			fmt.Sprintf("%dM", *f.MemorySize),
-			time.Second*time.Duration(*f.Timeout), *f.Description)
+			time.Second*time.Duration(*f.Timeout), descLimited)
 	}
 	if filtered > 0 {
 		table.AddTitle(fmt.Sprintf("AWS LAMBDA FUNCTIONS: %d (%s)", filtered, region))
@@ -112,7 +114,7 @@ func functionInfo(f *lambda.FunctionConfiguration, region string) {
 	table.AddTitle(fmt.Sprintf("AWS LAMBDA FUNCTION %s (%s)", *f.FunctionName, region))
 	table.AddRow("SHA256 Hash", *f.CodeSha256)
 	table.AddRow("Code Size", fmt.Sprintf("%.2fK", float32(*f.CodeSize)/1024.0))
-	table.AddRow("Description", *f.Description)
+	table.AddRow("Description", wordwrap.WrapString(*f.Description, 60))
 	table.AddRow("Amazon Resource Name", *f.FunctionArn)
 	table.AddRow("Handler", *f.Handler)
 	table.AddRow("Last Modified", parseDate(*f.LastModified).Format(time.RFC822))
