@@ -10,9 +10,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/apcera/termtables"
 	"github.com/aws/aws-sdk-go/service/lambda"
 	"github.com/mitchellh/go-wordwrap"
+	"github.com/xlab/tablewriter"
 )
 
 func listFunctions(svc *lambda.Lambda, region string, rx *regexp.Regexp) {
@@ -23,7 +23,7 @@ func listFunctions(svc *lambda.Lambda, region string, rx *regexp.Regexp) {
 		fmt.Println("0 lambda functions available.")
 		return
 	}
-	table := termtables.CreateTable()
+	table := tablewriter.CreateTable()
 	table.UTF8Box()
 	table.AddHeaders("#", "NAME", "UPDATED", "SIZE", "MEM LIMIT", "TIMEOUT", "DESCRIPTION")
 	var filtered int
@@ -109,7 +109,7 @@ func functionSource(svc *lambda.Lambda, f *lambda.FunctionConfiguration, path st
 }
 
 func functionInfo(f *lambda.FunctionConfiguration, region string) {
-	table := termtables.CreateTable()
+	table := tablewriter.CreateTable()
 	table.UTF8Box()
 	table.AddTitle(fmt.Sprintf("AWS LAMBDA FUNCTION %s (%s)", *f.FunctionName, region))
 	table.AddRow("SHA256 Hash", *f.CodeSha256)
@@ -127,7 +127,7 @@ func functionInfo(f *lambda.FunctionConfiguration, region string) {
 }
 
 func listRegions() {
-	table := termtables.CreateTable()
+	table := tablewriter.CreateTable()
 	table.UTF8Box()
 	table.AddTitle("AWS LAMBDA REGIONS (2015-12-20)")
 	table.AddRow("us-east-1", "US East (N. Virginia)")
