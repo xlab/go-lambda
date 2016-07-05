@@ -43,13 +43,6 @@ func main() {
 			listRegions()
 		}
 	})
-	golambda.Command("gopy", "Generates Python bindings for a Go package using a dockerized tool from gopy project.",
-		func(cmd *cli.Cmd) {
-			pkg := cmd.StringArg("PACKAGE", "", "Fully qualified Go package name.")
-			cmd.Action = func() {
-				runGopy(*pkg)
-			}
-		})
 	golambda.Command("info", "Gets info about specific AWS Lambda function (specified by ID or NAME).",
 		func(cmd *cli.Cmd) {
 			cmd.Spec = "(ID | NAME)"

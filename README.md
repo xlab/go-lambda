@@ -33,7 +33,6 @@ Options:
 Commands:
   list         Lists all defined AWS Lambda functions in the region.
   regions      Lists regions available for AWS Lambda service.
-  gopy         Generates Python bindings for a Go package using a dockerized tool from gopy project.
   info         Gets info about specific AWS Lambda function (specified by ID or NAME).
   source       Gets .zip of an AWS Lambda function source (specified by ID or NAME).
   delete       Deletes an AWS Lambda function (specified by ID or NAME).
@@ -92,7 +91,6 @@ $ go-lambda update example-handler handler github.com/xlab/go-lambda/example
 ### Roadmap
 
 - [ ] Replace JSON marshalling with something efficient (maybe);
-- [ ] Wait till [go-python/gopy](https://github.com/go-python/gopy) stabilizes enough to support `map[string]interface{}`;
 - [ ] Try to convince AWS staff that we need the native Go support in their cloud.
 
 Please, spread the word about `go-lambda` — let people use their favourite language for AWS Lambda. 🍻
