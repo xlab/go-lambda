@@ -1,4 +1,4 @@
-FROM golang:1.5.2-wheezy
+FROM golang:1.7-wheezy
 MAINTAINER Maxim Kupriianov <max@kc.vc>
 
 RUN apt-get update -q \
