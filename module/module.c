@@ -11,20 +11,20 @@
 #error "python 3 is not yet supported"
 #endif
 
-typedef void* lambda_handler_func;
+typedef int lambda_handle;
 
 typedef struct {
 	PyObject_HEAD
-	lambda_handler_func ptr;
+	lambda_handle handle;
 } lambda_handler;
 
-extern void* get_lambda_handler();
+extern lambda_handle get_lambda_handle();
 
 static PyObject*
 lambda_handler_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
 	lambda_handler *self;
 	self = (lambda_handler *)type->tp_alloc(type, 0);
-	self->ptr = get_lambda_handler();
+	self->handle = get_lambda_handle();
 	return (PyObject*)self;
 }
 
@@ -33,12 +33,12 @@ lambda_handler_dealloc(lambda_handler *self) {
 	self->ob_type->tp_free((PyObject*)self);
 }
 
-struct lambda_handler_call_return {
+struct lambda_handle_call_return {
 	char* data;
 	size_t size;
 };
 
-extern struct lambda_handler_call_return lambda_handler_call(void* p0, char* event, char* context);
+extern struct lambda_handle_call_return lambda_handle_call(lambda_handle h, char* event, char* context);
 
 static PyObject *
 lambda_handler_tp_call(lambda_handler *self, PyObject *args, PyObject *other) {
@@ -47,8 +47,8 @@ lambda_handler_tp_call(lambda_handler *self, PyObject *args, PyObject *other) {
 	if (!PyArg_ParseTuple(args, "ss", &event, &context)) {
 		return NULL;
 	}
-	struct lambda_handler_call_return ret;
-	ret = lambda_handler_call(self->ptr, event, context);
+	struct lambda_handle_call_return ret;
+	ret = lambda_handle_call(self->handle, event, context);
 	PyObject *result = PyString_FromStringAndSize(ret.data, ret.size);
 	return result;
 }

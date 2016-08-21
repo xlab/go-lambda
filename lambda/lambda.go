@@ -12,6 +12,9 @@ type HandlerFunc func(event json.RawMessage, context *Context) []byte
 // Use the provided HandlerFunc as handler for incoming requests. This function returns
 // a bridge that manages values passing between the caller (python) and the target HandlerFunc.
 //
+// Note: do not pass the bridge directly to C, otherwise CGo checker will complain,
+// instead use a map of handles, see module/module.go for example.
+//
 // Warning: bytes of eventData should be copied explicitly if you want to use them outside
 // the HandlerFunc scope (e.g. in goroutines), they are valid until the Bridge func returns.
 func Use(fn HandlerFunc) bridge {
@@ -20,11 +23,9 @@ func Use(fn HandlerFunc) bridge {
 		json.Unmarshal(bytesFrom(ctxData), &context)
 		event := json.RawMessage(bytesFrom(eventData))
 
-		r := fn(event, context)
-
-		hdr := (*sliceHeader)(unsafe.Pointer(&r))
-		result = (*C.char)(unsafe.Pointer(hdr.Data))
-		size = (C.size_t)(hdr.Len)
+		buf := fn(event, context)
+		result = C.CString(string(buf)) // TODO(xlab): optimize if needed
+		size = (C.size_t)(len(buf))
 		return
 	}
 }
