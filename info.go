@@ -19,7 +19,7 @@ func listFunctions(svc *lambda.Lambda, region string, rx *regexp.Regexp) {
 	if err != nil {
 		log.Fatalln(err)
 	} else if len(resp.Functions) == 0 {
-		fmt.Println("0 lambda functions available.")
+		fmt.Printf("0 lambda functions available in region %s.\n", region)
 		return
 	}
 	table := tablewriter.CreateTable()
