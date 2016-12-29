@@ -24,7 +24,11 @@ func init() {
 }
 
 func main() {
-	region := golambda.StringOpt("r region", "eu-west-1", "Specify the region.")
+	defaultRegion := os.Getenv("AWS_DEFAULT_REGION")
+	if "" == defaultRegion {
+		defaultRegion = "eu-west-1"
+	}
+	region := golambda.StringOpt("r region", defaultRegion, "Specify the region.")
 	golambda.Command("list", "Lists all defined AWS Lambda functions in the region.", func(cmd *cli.Cmd) {
 		filter := cmd.StringOpt("f filter", "", "Filter names by regexp.")
 		cmd.Action = func() {
