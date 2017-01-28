@@ -52,12 +52,12 @@ func packageDir(pkgImport string) (dir string) {
 }
 
 func getExecPath(name string) string {
-	out, err := exec.Command("which", name).Output()
+	out, err := exec.LookPath("docker")
 	if err != nil {
 		log.Fatalf("executable file %s not found in $PATH", name)
 		return ""
 	}
-	return string(bytes.TrimSpace(out))
+	return strings.TrimSpace(out)
 }
 
 func makeZip(main []byte, mainPath, libPath string, other ...string) []byte {
