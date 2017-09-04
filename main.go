@@ -24,7 +24,7 @@ func init() {
 }
 
 func main() {
-	defaultRegion := os.Getenv("AWS_DEFAULT_REGION")
+	defaultRegion := os.Getenv("AWS_REGION")
 	if "" == defaultRegion {
 		defaultRegion = "eu-west-1"
 	}
